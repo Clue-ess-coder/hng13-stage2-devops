@@ -1,0 +1,30 @@
+services:
+    nginx:
+        image: nginx:alpine
+        ports:
+            - "8080:80"
+        volumes:
+            - ./nginx.conf.template:/etc/nginx/templates/default.conf.template:ro
+        environment:
+            - ACTIVE_POOL=${ACTIVE_POOL}
+        depends_on:
+            - app_blue
+            - app_green
+
+    app_blue:
+        image: ${BLUE_IMAGE}
+        ports:
+            - "8081:3000"
+        environment:
+            - APP_POOL=blue
+            - RELEASE_ID=${RELEASE_ID_BLUE}
+            - PORT=3000
+
+    app_green:
+        image: ${GREEN_IMAGE}
+        ports:
+            - "8082:3000"
+        environment:
+            - APP_POOL=green
+            - RELEASE_ID=${RELEASE_ID_GREEN}
+            - PORT=3000
