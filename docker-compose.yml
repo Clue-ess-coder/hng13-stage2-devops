@@ -10,6 +10,7 @@ services:
         depends_on:
             - app_blue
             - app_green
+        restart: unless-stopped
 
     app_blue:
         image: ${BLUE_IMAGE}
@@ -19,6 +20,7 @@ services:
             - APP_POOL=blue
             - RELEASE_ID=${RELEASE_ID_BLUE}
             - PORT=3000
+        restart: unless-stopped
 
     app_green:
         image: ${GREEN_IMAGE}
@@ -28,3 +30,4 @@ services:
             - APP_POOL=green
             - RELEASE_ID=${RELEASE_ID_GREEN}
             - PORT=3000
+        restart: unless-stopped
