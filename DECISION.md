@@ -2,7 +2,7 @@
 
 ## Opening rant
 
-A lot of thought went into this project, and it didn't take quite long to realize that understanding the task itself was the first test. First I had to understand what this blue/green meant from a high level (the one/two slack threads giving real-world metaphors with a kitchen and the other my EC2-instance-fried-brain can't remember).
+A lot of thought went into this task, and it didn't take quite long to realize that understanding the task itself was the first test. First I had to understand what this blue/green meant from a high level (the one/two slack threads giving real-world metaphors with a kitchen and the other my EC2-instance-fried-brain can't remember).
 
 Running through hours of understanding nginx configurations and engaging in debates with Claude, I was able to finally wrap my head around a *how* for the task.
 
@@ -246,7 +246,7 @@ And the making sure I restart nginx with `docker compose restart nginx`
 
 ## Finalizing
 
-I made a copy of `.env` to `.env.example` and added `.env` to `.gitignore` (and moved my previous custom app out the development directory).
+I made a copy of `.env` to `.env.example` and added `.env` to `.gitignore`.
 
 Then published to GitHub.
 
