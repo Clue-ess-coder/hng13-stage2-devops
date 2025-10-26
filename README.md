@@ -1,29 +1,28 @@
-## HOW TO RUN
+# HNG13 Stage 2 DevOps - Blue/Green with Nginx Upstreams (Auto-Failover + Manual Toggle)
 
-create a bash script:
+## Setup and run
 
-```test.sh
-#!/bin/bash
-echo "=== Testing Blue/Green Failover ==="
+- Ensure dependencies are installed on the remote machine (git, docker, docker-compose and nginx)
+- Clone this repo (`git clone https://github.com/Clue-ess-coder/hng13-stage2-devops`)
+- Rename `.env.example` to `.env` (and change variables if desired e.g. `ACTIVE_POOL`)
+- Change directory into cloned repo and run `docker compose up`
 
-echo -e "\n1️⃣  Testing normal state (should be Blue)..."
-for i in {1..3}; do
-  curl -s http://localhost:8080/version | grep -o '"pool":"[^"]*"'
-done
+## Verification
 
-echo -e "\n\n2️⃣  Triggering chaos on Blue..."
-curl -X POST http://localhost:8081/chaos/start?mode=error
+Run the following commands to test proper workings. (Replace `<PUBLIC_IP_ADDRESS>` with your instance's public IP address or `localhost` if testing locally.)
 
-echo -e "\n\n3️⃣  Testing failover (should switch to Green)..."
-sleep 2
-for i in {1..5}; do
-  echo -n "Request $i: "
-  curl -s http://localhost:8080/version | grep -o '"pool":"[^"]*"'
-  sleep 0.5
-done
+```sh
+curl -s http://<PUBLIC_IP_ADDRESS>:8080/version                         # responds with green
 
-echo -e "\n\n4️⃣  Stopping chaos..."
-curl -X POST http://localhost:8081/chaos/stop
+curl -X POST http://<PUBLIC_IP_ADDRESS>:8081/chaos/start?mode=error     # or mode=timeout
 
-echo -e "\n\n✅ Test complete!"
+curl -s http://<PUBLIC_IP_ADDRESS>:8080/version                         # should change to green
+
+curl -X POST http://<PUBLIC_IP_ADDRESS>:8081/chaos/stop                 # successfully stops chaos on blue
+
+curl -s http://<PUBLIC_IP_ADDRESS>:8080/version                         # should change back to blue
 ```
+
+## DISCLAIMER
+
+If using an Amazon EC2 instance with a security group, make sure to add ports `8080`, `8081`, and `8082` to the **inbound rules** table (else requests via the public IP **will not** work—don't ask how I know that).
